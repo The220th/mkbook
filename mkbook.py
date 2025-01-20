@@ -108,6 +108,21 @@ def rotate_90(imgs: list) -> list:
         imgs[i] = imgs[i].rotate(90, expand=True)
     return imgs
 
+def A5_A4_fixed(imgs: list):
+    pout(f"Printing on A4 as two of A5", endl=False)
+    assert len(imgs) % 4 == 0
+    res = []
+    for i in range(0, len(imgs)//2):
+        if i % 2 == 0:
+            img_l, img_r = imgs[-1-i], imgs[i]
+        else:
+            img_l, img_r = imgs[i], imgs[-1-i]
+        img_l = ImageHundler(img_l)
+        img_l.append_2right(img_r)
+        res.append(img_l.get())
+    pout("OK")
+    return res
+
 def A5_A4(imgs: list, odd_even: bool = False) -> list:
     """
     odd_even == False -> odd
@@ -174,10 +189,13 @@ if __name__ == '__main__':
 
     imgs = fill_4(imgs)
 
-    imgs_odd, imgs_even = split(imgs)
+    pages = A5_A4_fixed(imgs)
+    imgs_odd, imgs_even = [], []
+    [imgs_odd.append(page_i) if i % 2 == 0 else imgs_even.append(page_i) for i, page_i in enumerate(pages)]
 
-    imgs_odd = A5_A4(imgs_odd, False)
-    imgs_even = A5_A4(imgs_even, True)
+    # imgs_odd, imgs_even = split(imgs)
+    # imgs_odd = A5_A4(imgs_odd, False)
+    # imgs_even = A5_A4(imgs_even, True)
 
     if(rotate180_even == True):
         imgs_even = rotate_even_180(imgs_even)
